@@ -24,7 +24,7 @@ jobs:
       run:
         working-directory: cicd-section/api
     steps:
-    # チェックアウト
+  # チェックアウト
       - uses: actions/checkout@v4
 
       - name: Run Test and Build an Image
