@@ -24,8 +24,8 @@ jobs:
       run:
         working-directory: cicd-section/api
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
+    # チェックアウト
+      - uses: actions/checkout@v4
 
       - name: Run Test and Build an Image
         run: docker image build -t temp_api_image:latest .
@@ -41,7 +41,9 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Push the image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          echo "Tagging and pushing to: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}"
-          docker image tag temp_api_image:latest ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
-          docker image push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          docker image tag temp_api_image:latest 
+          $ECR_REGISTRY/$ECS_REPOSITORY:${{ github.sha }}
+          docker image push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
